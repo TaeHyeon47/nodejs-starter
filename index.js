@@ -29,6 +29,12 @@ const http = require('http');
 
 //////////////////////////
 // SERVER
+
+// 프로그램이 실행될 때 생성되므로 API 요청 시, 코드 실행을 막지 않음.
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, 'utf-8');
+const dataObject = JSON.parse(data);
+
+
 const server = http.createServer((req, res) =>{
   const pathName = req.url;
 
@@ -36,6 +42,12 @@ const server = http.createServer((req, res) =>{
     res.end('This is the overview');
   } else if (pathName === '/product') {
     res.end('This is the product');
+  } else if (pathName === '/api') {
+    fs.readFile(`${__dirname}/dev-data/data.json`, 'utf-8', (err, data) => {
+      const productData = JSON.parse(data);
+      res.writeHead(200, {'Content-type' : 'application/json'})
+      res.end(data)
+    })
   } else {
     res.writeHead(404, {
       'Content-Type' : 'text/html',
